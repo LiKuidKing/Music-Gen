@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>SPRUNKI STUDIO — Drag & Drop Music Maker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="phase-normal">
+  <!-- Glitch / Transition Overlay for Phase 2 -->
+  <div id="glitch-overlay" class="glitch-overlay" aria-hidden="true"></div>
+  <div class="horror-vignette" aria-hidden="true"></div>
+  <div class="horror-scanlines" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <!-- Top Header Bar -->
+    <header class="top-bar">
+      <div class="brand-group">
+        <div class="logo-badge" id="logo-badge">
+          <span class="logo-title">SPRUNKI</span>
+          <span class="logo-sub" id="phase-label">STUDIO</span>
+        </div>
+        <div class="beat-clock" title="Loop Cycle Progress">
+          <svg class="clock-ring" viewBox="0 0 36 36">
+            <circle class="clock-track" cx="18" cy="18" r="15" />
+            <circle class="clock-fill" id="clock-progress" cx="18" cy="18" r="15" />
+          </svg>
+          <span class="clock-bar" id="clock-bar-num">1</span>
+        </div>
+        <div class="bpm-pill" id="bpm-pill" title="Current Tempo">
+          <span id="bpm-value">120</span> <small>BPM</small>
+        </div>
+      </div>
+
+      <div class="controls-group">
+        <button class="ctrl-btn" id="btn-play-pause" title="Play / Pause (Space)">
+          <span class="btn-icon" id="play-icon">❚❚</span>
+          <span class="btn-text" id="play-text">Pause</span>
+        </button>
+
+        <div class="preset-dropdown">
+          <button class="ctrl-btn" id="btn-presets" title="Load a preset mix">
+            <span class="btn-icon">✨</span>
+            <span class="btn-text">Mixes</span>
+          </button>
+          <div class="preset-menu" id="preset-menu">
+            <button data-preset="friends">🌟 Friends Jam (Connor, Allison & Doug)</button>
+            <button data-preset="sunny">☀️ Sunny Groove</button>
+            <button data-preset="electro">⚡ Electro Bounce</button>
+            <button data-preset="choir">🎵 Dream Choir</button>
+            <button data-preset="western">🤠 Sunset Whistle</button>
+            <button data-preset="horror" class="danger-item">👁️ Phase 2: Horror</button>
+          </div>
+        </div>
+
+        <button class="ctrl-btn" id="btn-random" title="Randomize Mix (R)">
+          <span class="btn-icon">🎲</span>
+          <span class="btn-text">Random</span>
+        </button>
+
+        <button class="ctrl-btn" id="btn-record" title="Record your mix to audio">
+          <span class="rec-dot"></span>
+          <span class="btn-text" id="rec-text">Rec</span>
+        </button>
+
+        <button class="ctrl-btn danger" id="btn-clear" title="Clear all characters (C)">
+          <span class="btn-icon">↺</span>
+          <span class="btn-text">Reset</span>
+        </button>
+
+        <div class="volume-wrap" title="Master Volume">
+          <span class="vol-icon">🔊</span>
+          <input type="range" id="master-volume" min="0" max="100" value="80" aria-label="Master Volume" />
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Interactive Stage -->
+    <main class="stage-container" id="stage-container">
+      <!-- Dynamic Scenic Background -->
+      <div class="scene-bg" aria-hidden="true">
+        <div class="sky-sun"></div>
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+        <div class="hill hill-back"></div>
+        <div class="hill hill-front"></div>
+        <canvas id="visualizer-canvas" class="visualizer-canvas"></canvas>
+      </div>
+
+      <!-- Helper Banner when empty -->
+      <div class="stage-hint" id="stage-hint">
+        <span>Drag an outfit onto any character below — or click an outfit to equip it!</span>
+      </div>
+
+      <!-- 7 Character Slots -->
+      <section class="character-stage" id="character-stage" aria-label="Musical Stage">
+        <!-- Populated by app.js with 7 slots -->
+      </section>
+
+      <!-- Particle Burst Layer -->
+      <div class="fx-layer" id="fx-layer" aria-hidden="true"></div>
+    </main>
+
+    <!-- Bottom Outfit Tray -->
+    <footer class="tray-container">
+      <div class="tray-categories">
+        <span class="cat-tag cat-beats">Beats</span>
+        <span class="cat-tag cat-effects">Effects</span>
+        <span class="cat-tag cat-melodies">Melodies</span>
+        <span class="cat-tag cat-vocals">Vocals</span>
+        <span class="cat-tag cat-mystery" id="mystery-hint">??? Drag Black Hat for Phase 2</span>
+      </div>
+      <div class="outfit-tray" id="outfit-tray" aria-label="Outfits and Sound Icons">
+        <!-- Populated by app.js with 20 draggable outfit tiles -->
+      </div>
+    </footer>
+  </div>
+
+  <!-- Floating Drag Ghost -->
+  <div id="drag-ghost" class="drag-ghost hidden" aria-hidden="true"></div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script src="characters.js"></script>
+  <script src="audio-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1053 @@
+/* ==========================================================================
+   SPRUNKI STUDIO — Styles & Animations
+   ========================================================================== */
+
+:root {
+  --sky-top: #5ec8ff;
+  --sky-bottom: #c9f0ff;
+  --hill-back: #78d669;
+  --hill-front: #4eb849;
+  --sun-color: #ffe24d;
+  --sun-glow: rgba(255, 226, 77, 0.55);
+  --ui-bg: rgba(255, 255, 255, 0.88);
+  --ui-border: #1e2430;
+  --ui-text: #1b2230;
+  --tray-bg: rgba(255, 255, 255, 0.92);
+  --slot-shadow: rgba(24, 54, 24, 0.22);
+  --accent: #ff7a1a;
+  --danger: #e83b4a;
+  --font-main: 'Fredoka', 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Phase 2: Horror Mode Theme */
+body.phase-horror {
+  --sky-top: #07050a;
+  --sky-bottom: #26070d;
+  --hill-back: #190d14;
+  --hill-front: #0e070b;
+  --sun-color: #cc1428;
+  --sun-glow: rgba(204, 20, 40, 0.6);
+  --ui-bg: rgba(18, 12, 18, 0.92);
+  --ui-border: #631824;
+  --ui-text: #f1dfe4;
+  --tray-bg: rgba(14, 9, 14, 0.94);
+  --slot-shadow: rgba(0, 0, 0, 0.72);
+  --accent: #d91e36;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-main);
+  color: var(--ui-text);
+  background: var(--sky-top);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   TOP BAR
+   ========================================================================== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 18px;
+  background: var(--ui-bg);
+  border-bottom: 3px solid var(--ui-border);
+  backdrop-filter: blur(8px);
+  z-index: 30;
+  flex-shrink: 0;
+  transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ff8f1f, #ff4b2b);
+  border: 3px solid var(--ui-border);
+  box-shadow: 0 3px 0 var(--ui-border);
+  color: #fff;
+  transition: all 0.4s ease;
+}
+
+body.phase-horror .logo-badge {
+  background: linear-gradient(135deg, #5c0612, #1c0206);
+  border-color: #a61b2b;
+  box-shadow: 0 3px 0 #45060e, 0 0 14px rgba(217, 30, 54, 0.45);
+  animation: horrorJitter 2.4s infinite;
+}
+
+.logo-title {
+  font-weight: 900;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  text-shadow: 1px 2px 0 rgba(0, 0, 0, 0.28);
+}
+
+.logo-sub {
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  opacity: 0.92;
+}
+
+/* Loop Clock Ring */
+.beat-clock {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clock-ring {
+  width: 36px;
+  height: 36px;
+  transform: rotate(-90deg);
+}
+
+.clock-track {
+  fill: none;
+  stroke: rgba(128, 128, 140, 0.25);
+  stroke-width: 4;
+}
+
+.clock-fill {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-dasharray: 94.25;
+  stroke-dashoffset: 94.25;
+  transition: stroke 0.4s ease;
+}
+
+.clock-bar {
+  position: absolute;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.bpm-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 2px solid var(--ui-border);
+  background: rgba(128, 128, 140, 0.12);
+  font-size: 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.bpm-pill small {
+  opacity: 0.7;
+  font-size: 0.65rem;
+}
+
+/* Controls */
+.controls-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 12px;
+  border: 2.5px solid var(--ui-border);
+  background: #ffffff;
+  color: #1b2230;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--ui-border);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
+}
+
+body.phase-horror .ctrl-btn {
+  background: #23141b;
+  color: #f4dee3;
+  border-color: #7c2231;
+  box-shadow: 0 3px 0 #3f0c16;
+}
+
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  background: #fff4e8;
+}
+
+body.phase-horror .ctrl-btn:hover {
+  background: #361924;
+}
+
+.ctrl-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--ui-border);
+}
+
+.ctrl-btn.danger:hover {
+  background: #ffe7ea;
+  color: #b71c2b;
+}
+
+.ctrl-btn.recording {
+  background: #ff2d42;
+  color: #fff;
+  border-color: #7c0a18;
+  animation: pulseRec 1s infinite;
+}
+
+.rec-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #e83b4a;
+  display: inline-block;
+}
+
+.ctrl-btn.recording .rec-dot {
+  background: #fff;
+}
+
+/* Preset Dropdown */
+.preset-dropdown {
+  position: relative;
+}
+
+.preset-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 190px;
+  background: var(--ui-bg);
+  border: 2.5px solid var(--ui-border);
+  border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 60;
+}
+
+.preset-menu.open {
+  display: flex;
+}
+
+.preset-menu button {
+  text-align: left;
+  padding: 8px 11px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ui-text);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.preset-menu button:hover {
+  background: rgba(255, 122, 26, 0.16);
+}
+
+.preset-menu button.danger-item {
+  color: #d91e36;
+  border-top: 1px solid rgba(128, 128, 140, 0.2);
+  margin-top: 2px;
+  padding-top: 9px;
+}
+
+/* Volume */
+.volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 2px solid var(--ui-border);
+  background: rgba(128, 128, 140, 0.1);
+}
+
+.volume-wrap input[type="range"] {
+  width: 72px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   STAGE & SCENIC BACKGROUND
+   ========================================================================== */
+.stage-container {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.scene-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 68%);
+  transition: background 0.8s ease;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sky-sun {
+  position: absolute;
+  top: 24px;
+  right: 8%;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: var(--sun-color);
+  box-shadow: 0 0 0 12px var(--sun-glow), 0 0 42px var(--sun-glow);
+  transition: all 0.8s ease;
+}
+
+body.phase-horror .sky-sun {
+  top: 28px;
+  width: 82px;
+  height: 82px;
+  box-shadow: 0 0 0 8px rgba(204, 20, 40, 0.25), 0 0 65px rgba(204, 20, 40, 0.75);
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  transition: opacity 0.6s ease, background 0.6s ease;
+}
+
+body.phase-horror .cloud {
+  background: rgba(55, 18, 28, 0.55);
+}
+
+.cloud::before,
+.cloud::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.cloud-1 {
+  width: 110px; height: 34px; top: 34px; left: 9%;
+  animation: cloudFloat 36s linear infinite;
+}
+.cloud-1::before { width: 48px; height: 48px; top: -22px; left: 16px; }
+.cloud-1::after { width: 38px; height: 38px; top: -14px; right: 16px; }
+
+.cloud-2 {
+  width: 90px; height: 28px; top: 78px; left: 42%;
+  opacity: 0.7;
+  animation: cloudFloat 48s linear infinite reverse;
+}
+.cloud-2::before { width: 40px; height: 40px; top: -18px; left: 14px; }
+.cloud-2::after { width: 32px; height: 32px; top: -12px; right: 14px; }
+
+.cloud-3 {
+  width: 130px; height: 36px; top: 44px; left: 72%;
+  opacity: 0.85;
+  animation: cloudFloat 42s linear infinite;
+}
+.cloud-3::before { width: 54px; height: 54px; top: -24px; left: 22px; }
+.cloud-3::after { width: 42px; height: 42px; top: -15px; right: 20px; }
+
+.hill {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  border-radius: 50% 50% 0 0;
+  transition: background 0.8s ease;
+}
+
+.hill-back {
+  height: 44%;
+  bottom: -14%;
+  background: var(--hill-back);
+}
+
+.hill-front {
+  height: 32%;
+  bottom: -14%;
+  left: -15%;
+  width: 130%;
+  background: var(--hill-front);
+  border-top: 3px solid rgba(0, 0, 0, 0.14);
+}
+
+.visualizer-canvas {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+/* Stage Hint */
+.stage-hint {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 2px solid var(--ui-border);
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #1e2430;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 12;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  text-align: center;
+  max-width: 90%;
+}
+
+body.phase-horror .stage-hint {
+  background: rgba(26, 10, 15, 0.88);
+  color: #f3c8d0;
+  border-color: #7c1f2e;
+}
+
+.stage-hint.hidden-hint {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -10px);
+}
+
+/* ==========================================================================
+   CHARACTER STAGE (7 SLOTS)
+   ========================================================================== */
+.character-stage {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(4px, 1.2vw, 14px);
+  width: min(1160px, 98%);
+  padding: 0 12px 14px;
+  height: 100%;
+  max-height: 410px;
+}
+
+.char-slot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  padding-bottom: 6px;
+  transition: transform 0.2s cubic-bezier(0.22, 1.35, 0.36, 1);
+  touch-action: none;
+}
+
+.char-slot::before {
+  content: '';
+  position: absolute;
+  bottom: 34px;
+  width: 72%;
+  max-width: 96px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--slot-shadow);
+  transition: transform 0.2s ease, background 0.4s ease;
+  pointer-events: none;
+}
+
+.char-slot.drag-over {
+  transform: scale(1.08) translateY(-6px);
+}
+
+.char-slot.drag-over::before {
+  transform: scale(1.22);
+  background: rgba(255, 196, 36, 0.55);
+}
+
+.char-slot.drag-over .char-avatar-wrap {
+  filter: drop-shadow(0 0 14px rgba(255, 224, 90, 0.9));
+}
+
+.char-avatar-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 142px;
+  aspect-ratio: 140 / 215;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+  transform-origin: center bottom;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+.char-slot.occupied .char-avatar-wrap {
+  cursor: grab;
+}
+
+.char-slot.occupied .char-avatar-wrap:active {
+  cursor: grabbing;
+}
+
+.char-slot.muted .char-avatar-wrap {
+  opacity: 0.42;
+  filter: grayscale(0.7);
+}
+
+.char-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+/* Equip Pop Animation */
+.char-slot.just-equipped .char-avatar-wrap {
+  animation: equipBounce 0.48s cubic-bezier(0.22, 1.45, 0.36, 1);
+}
+
+/* Beat Hit Animation */
+.char-avatar-wrap.beat-hit {
+  animation: beatBounce 0.22s cubic-bezier(0.22, 1.25, 0.36, 1);
+}
+
+.char-avatar-wrap.beat-sway-left {
+  animation: swayLeft 0.3s ease-out;
+}
+
+.char-avatar-wrap.beat-sway-right {
+  animation: swayRight 0.3s ease-out;
+}
+
+.char-avatar-wrap.horror-twitch {
+  animation: horrorTwitch 0.16s steps(2) 2;
+}
+
+/* Blank Polo gentle idle breathing */
+.char-slot:not(.occupied) .char-avatar-wrap {
+  animation: idleBreath 3.2s ease-in-out infinite;
+}
+
+/* Mouth & Eye dynamic hooks inside SVG */
+.char-svg .mouth-sing {
+  opacity: 0;
+  transform-origin: center;
+  transition: opacity 0.06s linear;
+}
+.char-avatar-wrap.singing .char-svg .mouth-sing {
+  opacity: 1;
+}
+.char-avatar-wrap.singing .char-svg .mouth-rest {
+  opacity: 0;
+}
+
+.char-svg .char-head-group {
+  transform-origin: 70px 118px;
+  transition: transform 0.09s ease-out;
+}
+.char-avatar-wrap.beat-hit .char-svg .char-head-group {
+  transform: translateY(4px) scale(1.03, 0.96);
+}
+.char-avatar-wrap.singing .char-svg .char-head-group {
+  transform: translateY(-3px) scale(1.02, 1.03);
+}
+
+/* Character Nameplate & Controls Bar */
+.slot-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 30px;
+  margin-top: 2px;
+  z-index: 15;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.char-slot.occupied .slot-controls {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.slot-mini-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 2px solid var(--ui-border);
+  background: rgba(255, 255, 255, 0.92);
+  color: #1e2430;
+  font-size: 0.7rem;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 0 var(--ui-border);
+  transition: transform 0.1s ease, background 0.15s ease;
+}
+
+body.phase-horror .slot-mini-btn {
+  background: #22121a;
+  color: #f4d9e0;
+  border-color: #7d2130;
+  box-shadow: 0 2px 0 #3f0c15;
+}
+
+.slot-mini-btn:hover {
+  transform: scale(1.1);
+}
+
+.slot-mini-btn.active-mute {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.slot-mini-btn.active-solo {
+  background: #f5b700;
+  color: #1c1910;
+}
+
+.slot-mini-btn.btn-remove:hover {
+  background: #e83b4a;
+  color: #fff;
+}
+
+.slot-name-pill {
+  position: absolute;
+  top: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  background: rgba(255, 255, 255, 0.88);
+  border: 2px solid var(--ui-border);
+  color: #1e2430;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+body.phase-horror .slot-name-pill {
+  background: rgba(28, 10, 16, 0.9);
+  color: #f8cfd8;
+  border-color: #8f1d2e;
+}
+
+.char-slot.occupied:hover .slot-name-pill,
+.char-slot.occupied.just-equipped .slot-name-pill {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   BOTTOM OUTFIT TRAY
+   ========================================================================== */
+.tray-container {
+  background: var(--tray-bg);
+  border-top: 3px solid var(--ui-border);
+  padding: 8px 14px 12px;
+  z-index: 25;
+  flex-shrink: 0;
+  transition: background 0.5s ease, border-color 0.5s ease;
+}
+
+.tray-categories {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.cat-tag {
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 2px solid var(--ui-border);
+}
+
+.cat-beats { background: #ffcaa3; color: #541f00; }
+.cat-effects { background: #c5e8ff; color: #073257; }
+.cat-melodies { background: #fff0a8; color: #594100; }
+.cat-vocals { background: #ffd0eb; color: #590a39; }
+.cat-mystery {
+  background: #1a1822;
+  color: #ff475a;
+  border-color: #5e1824;
+  margin-left: 6px;
+}
+
+body.phase-horror .cat-mystery {
+  background: #610715;
+  color: #ffdce2;
+  animation: pulseRec 1.8s infinite;
+}
+
+.outfit-tray {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 7px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.outfit-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 4px 4px;
+  border-radius: 14px;
+  border: 2.5px solid var(--ui-border);
+  background: #fff;
+  box-shadow: 0 3px 0 var(--ui-border);
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.14s cubic-bezier(0.22, 1.35, 0.36, 1), box-shadow 0.14s ease, opacity 0.2s ease, filter 0.2s ease;
+}
+
+body.phase-horror .outfit-tile {
+  background: #1d1118;
+  border-color: #6b1d2b;
+  box-shadow: 0 3px 0 #3a0b14;
+}
+
+.outfit-tile:hover:not(.in-use) {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 7px 0 var(--ui-border);
+  z-index: 4;
+}
+
+.outfit-tile:active:not(.in-use) {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+.outfit-tile.in-use {
+  opacity: 0.34;
+  filter: grayscale(0.85);
+  cursor: default;
+  transform: scale(0.94);
+  box-shadow: 0 1px 0 var(--ui-border);
+}
+
+.outfit-tile.is-black-hat {
+  background: linear-gradient(145deg, #24212e, #0d0b12);
+  border-color: #09080c;
+  color: #fff;
+}
+
+.outfit-tile.is-black-hat:hover:not(.in-use) {
+  box-shadow: 0 7px 0 #09080c, 0 0 18px rgba(217, 30, 54, 0.7);
+}
+
+.outfit-icon-wrap {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.outfit-icon-wrap svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.outfit-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-top: 2px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.outfit-cat-dot {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+/* ==========================================================================
+   DRAG GHOST, PARTICLES, HORROR OVERLAYS & TOAST
+   ========================================================================== */
+.drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 76px;
+  height: 76px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%) scale(1.15);
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.32));
+  transition: transform 0.08s ease;
+}
+
+.drag-ghost.hidden {
+  display: none;
+}
+
+.fx-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.fx-particle {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid #1e2430;
+  pointer-events: none;
+  animation: particleFly 0.65s cubic-bezier(0.16, 0.9, 0.3, 1) forwards;
+}
+
+.horror-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0;
+  background: radial-gradient(circle at center, transparent 42%, rgba(10, 0, 4, 0.72) 100%);
+  transition: opacity 0.8s ease;
+}
+
+body.phase-horror .horror-vignette {
+  opacity: 1;
+}
+
+.horror-scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 41;
+  opacity: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.16) 0px,
+    rgba(0, 0, 0, 0.16) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  transition: opacity 0.8s ease;
+}
+
+body.phase-horror .horror-scanlines {
+  opacity: 0.55;
+}
+
+.glitch-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  background: #000;
+}
+
+.glitch-overlay.active {
+  animation: phaseGlitch 0.9s steps(3) forwards;
+}
+
+.toast {
+  position: fixed;
+  bottom: 185px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 9px 18px;
+  border-radius: 14px;
+  background: #1b2230;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.86rem;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 200;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 10px);
+}
+
+/* ==========================================================================
+   KEYFRAMES
+   ========================================================================== */
+@keyframes cloudFloat {
+  0% { transform: translateX(-30px); }
+  50% { transform: translateX(40px); }
+  100% { transform: translateX(-30px); }
+}
+
+@keyframes idleBreath {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.018); }
+}
+
+@keyframes equipBounce {
+  0% { transform: scale(0.76, 1.24) translateY(-18px); }
+  45% { transform: scale(1.12, 0.88) translateY(3px); }
+  75% { transform: scale(0.97, 1.04) translateY(-3px); }
+  100% { transform: scale(1, 1) translateY(0); }
+}
+
+@keyframes beatBounce {
+  0% { transform: scale(1, 1); }
+  35% { transform: scale(1.06, 0.93) translateY(3px); }
+  100% { transform: scale(1, 1); }
+}
+
+@keyframes swayLeft {
+  0% { transform: rotate(0deg); }
+  40% { transform: rotate(-4.5deg) translateY(-3px); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes swayRight {
+  0% { transform: rotate(0deg); }
+  40% { transform: rotate(4.5deg) translateY(-3px); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes horrorTwitch {
+  0% { transform: translate(0, 0) skewX(0deg); }
+  50% { transform: translate(-3px, 2px) skewX(5deg); }
+  100% { transform: translate(2px, -1px) skewX(-3deg); }
+}
+
+@keyframes horrorJitter {
+  0%, 92%, 100% { transform: translate(0, 0); }
+  94% { transform: translate(-2px, 1px); }
+  96% { transform: translate(2px, -1px); }
+  98% { transform: translate(-1px, 0); }
+}
+
+@keyframes pulseRec {
+  0%, 100% { box-shadow: 0 3px 0 #7c0a18, 0 0 0 0 rgba(255, 45, 66, 0.6); }
+  50% { box-shadow: 0 3px 0 #7c0a18, 0 0 0 8px rgba(255, 45, 66, 0); }
+}
+
+@keyframes particleFly {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.2); }
+}
+
+@keyframes phaseGlitch {
+  0% { opacity: 0.95; background: #000; }
+  20% { opacity: 0.85; background: #c40e24; }
+  40% { opacity: 1; background: #09050a; }
+  60% { opacity: 0.7; background: #ffffff; }
+  80% { opacity: 0.9; background: #4a040e; }
+  100% { opacity: 0; }
+}
+
+/* ==========================================================================
+   RESPONSIVE TWEAKS
+   ========================================================================== */
+@media (max-width: 900px) {
+  .outfit-tray {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    max-height: 152px;
+    overflow-y: auto;
+    padding-bottom: 4px;
+  }
+  .btn-text {
+    display: none;
+  }
+  .volume-wrap input[type="range"] {
+    width: 52px;
+  }
+}
+
+@media (max-width: 620px) {
+  .top-bar {
+    padding: 8px 10px;
+  }
+  .bpm-pill {
+    display: none;
+  }
+  .character-stage {
+    gap: 2px;
+    padding: 0 4px 10px;
+  }
+  .slot-mini-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 0.6rem;
+  }
+  .outfit-icon-wrap {
+    width: 36px;
+    height: 36px;
+  }
+}
