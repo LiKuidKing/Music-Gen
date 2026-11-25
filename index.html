@@ -7,10 +7,12 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="phase-normal">
-  <!-- Glitch / Transition Overlay for Phase 2 -->
+  <!-- Glitch / Splash Transition Overlays -->
   <div id="glitch-overlay" class="glitch-overlay" aria-hidden="true"></div>
   <div class="horror-vignette" aria-hidden="true"></div>
   <div class="horror-scanlines" aria-hidden="true"></div>
+  <div class="underwater-caustics" aria-hidden="true"></div>
+  <div class="phonk-vignette" aria-hidden="true"></div>
 
   <div class="app-shell">
     <!-- Top Header Bar -->
@@ -49,6 +51,8 @@
             <button data-preset="electro">⚡ Electro Bounce</button>
             <button data-preset="choir">🎵 Dream Choir</button>
             <button data-preset="western">🤠 Sunset Whistle</button>
+            <button data-preset="underwater" class="aqua-item">🌊 Underwater Techno</button>
+            <button data-preset="phonk" class="phonk-item">🔥 Drift Phonk</button>
             <button data-preset="horror" class="danger-item">👁️ Phase 2: Horror</button>
           </div>
         </div>
@@ -80,11 +84,28 @@
       <!-- Dynamic Scenic Background -->
       <div class="scene-bg" aria-hidden="true">
         <div class="sky-sun"></div>
+        <div class="underwater-rays">
+          <span class="ray ray-1"></span>
+          <span class="ray ray-2"></span>
+          <span class="ray ray-3"></span>
+          <span class="ray ray-4"></span>
+        </div>
+        <div class="underwater-bubbles">
+          <span class="bubble b1"></span>
+          <span class="bubble b2"></span>
+          <span class="bubble b3"></span>
+          <span class="bubble b4"></span>
+          <span class="bubble b5"></span>
+          <span class="bubble b6"></span>
+          <span class="bubble b7"></span>
+          <span class="bubble b8"></span>
+        </div>
         <div class="cloud cloud-1"></div>
         <div class="cloud cloud-2"></div>
         <div class="cloud cloud-3"></div>
         <div class="hill hill-back"></div>
         <div class="hill hill-front"></div>
+        <div class="phonk-grid"></div>
         <canvas id="visualizer-canvas" class="visualizer-canvas"></canvas>
       </div>
 
@@ -109,7 +130,7 @@
         <span class="cat-tag cat-effects">Effects</span>
         <span class="cat-tag cat-melodies">Melodies</span>
         <span class="cat-tag cat-vocals">Vocals</span>
-        <span class="cat-tag cat-mystery" id="mystery-hint">??? Drag Black Hat for Phase 2</span>
+        <span class="cat-tag cat-mystery" id="mystery-hint">👁️ Black · 🌊 Aqua · 🔥 Drift = Theme Modes</span>
       </div>
       <div class="outfit-tray" id="outfit-tray" aria-label="Outfits and Sound Icons">
         <!-- Populated by app.js with 20 draggable outfit tiles -->

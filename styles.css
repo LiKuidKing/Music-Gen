@@ -35,6 +35,38 @@ body.phase-horror {
   --accent: #d91e36;
 }
 
+/* Phase 3: Underwater Techno Theme */
+body.phase-underwater {
+  --sky-top: #021229;
+  --sky-bottom: #066b85;
+  --hill-back: #083d63;
+  --hill-front: #052242;
+  --sun-color: #38f9ff;
+  --sun-glow: rgba(56, 249, 255, 0.65);
+  --ui-bg: rgba(5, 22, 46, 0.9);
+  --ui-border: #12c8e8;
+  --ui-text: #dffbff;
+  --tray-bg: rgba(4, 18, 38, 0.94);
+  --slot-shadow: rgba(0, 217, 255, 0.25);
+  --accent: #00f0ff;
+}
+
+/* Phase 4: Drift Phonk Theme */
+body.phase-phonk {
+  --sky-top: #080212;
+  --sky-bottom: #330854;
+  --hill-back: #1f0636;
+  --hill-front: #11031f;
+  --sun-color: #ff2e93;
+  --sun-glow: rgba(192, 46, 255, 0.72);
+  --ui-bg: rgba(16, 6, 30, 0.92);
+  --ui-border: #b44cff;
+  --ui-text: #f7e6ff;
+  --tray-bg: rgba(12, 4, 24, 0.95);
+  --slot-shadow: rgba(180, 76, 255, 0.32);
+  --accent: #ff2e93;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -103,6 +135,18 @@ body.phase-horror .logo-badge {
   border-color: #a61b2b;
   box-shadow: 0 3px 0 #45060e, 0 0 14px rgba(217, 30, 54, 0.45);
   animation: horrorJitter 2.4s infinite;
+}
+
+body.phase-underwater .logo-badge {
+  background: linear-gradient(135deg, #00c8ff, #7928ca);
+  border-color: #4ef7ff;
+  box-shadow: 0 3px 0 #073957, 0 0 18px rgba(0, 240, 255, 0.55);
+}
+
+body.phase-phonk .logo-badge {
+  background: linear-gradient(135deg, #9d17ff, #ff1e7a);
+  border-color: #e69cff;
+  box-shadow: 0 3px 0 #3a0466, 0 0 20px rgba(255, 46, 147, 0.65);
 }
 
 .logo-title {
@@ -204,6 +248,20 @@ body.phase-horror .ctrl-btn {
   box-shadow: 0 3px 0 #3f0c16;
 }
 
+body.phase-underwater .ctrl-btn {
+  background: #0a294d;
+  color: #dffbff;
+  border-color: #16c7e8;
+  box-shadow: 0 3px 0 #054463;
+}
+
+body.phase-phonk .ctrl-btn {
+  background: #210938;
+  color: #f7e6ff;
+  border-color: #b44cff;
+  box-shadow: 0 3px 0 #4a0a7a;
+}
+
 .ctrl-btn:hover {
   transform: translateY(-1px);
   background: #fff4e8;
@@ -211,6 +269,16 @@ body.phase-horror .ctrl-btn {
 
 body.phase-horror .ctrl-btn:hover {
   background: #361924;
+}
+
+body.phase-underwater .ctrl-btn:hover {
+  background: #103b6b;
+  box-shadow: 0 3px 0 #054463, 0 0 12px rgba(0, 240, 255, 0.35);
+}
+
+body.phase-phonk .ctrl-btn:hover {
+  background: #360f5c;
+  box-shadow: 0 3px 0 #4a0a7a, 0 0 14px rgba(255, 46, 147, 0.45);
 }
 
 .ctrl-btn:active {
@@ -284,11 +352,27 @@ body.phase-horror .ctrl-btn:hover {
   background: rgba(255, 122, 26, 0.16);
 }
 
-.preset-menu button.danger-item {
-  color: #d91e36;
+.preset-menu button.aqua-item {
+  color: #009fc2;
   border-top: 1px solid rgba(128, 128, 140, 0.2);
   margin-top: 2px;
   padding-top: 9px;
+}
+
+body.phase-underwater .preset-menu button.aqua-item {
+  color: #4ef7ff;
+}
+
+.preset-menu button.phonk-item {
+  color: #a822ff;
+}
+
+body.phase-phonk .preset-menu button.phonk-item {
+  color: #ff6ad5;
+}
+
+.preset-menu button.danger-item {
+  color: #d91e36;
 }
 
 /* Volume */
@@ -350,6 +434,79 @@ body.phase-horror .sky-sun {
   box-shadow: 0 0 0 8px rgba(204, 20, 40, 0.25), 0 0 65px rgba(204, 20, 40, 0.75);
 }
 
+body.phase-underwater .sky-sun {
+  top: 22px;
+  width: 86px;
+  height: 86px;
+  background: radial-gradient(circle at 38% 35%, #ffffff 0%, #52fbff 42%, #00a8d9 100%);
+  box-shadow: 0 0 0 14px rgba(0, 240, 255, 0.22), 0 0 70px rgba(0, 240, 255, 0.85);
+}
+
+body.phase-phonk .sky-sun {
+  top: 20px;
+  width: 92px;
+  height: 92px;
+  background: repeating-linear-gradient(
+    180deg,
+    #ff2e93 0px,
+    #ff2e93 12px,
+    #b44cff 12px,
+    #b44cff 18px,
+    #210538 18px,
+    #210538 22px
+  );
+  box-shadow: 0 0 0 10px rgba(180, 76, 255, 0.28), 0 0 72px rgba(255, 46, 147, 0.85);
+}
+
+/* Underwater Light Rays & Rising Bubbles */
+.underwater-rays,
+.underwater-bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+body.phase-underwater .underwater-rays,
+body.phase-underwater .underwater-bubbles {
+  opacity: 1;
+}
+
+.underwater-rays .ray {
+  position: absolute;
+  top: -15%;
+  width: 110px;
+  height: 115%;
+  background: linear-gradient(180deg, rgba(84, 248, 255, 0.22) 0%, rgba(0, 212, 255, 0.04) 68%, transparent 100%);
+  transform-origin: top center;
+  filter: blur(4px);
+  animation: raySway 7s ease-in-out infinite alternate;
+}
+
+.ray-1 { left: 10%; transform: rotate(12deg); animation-delay: 0s; }
+.ray-2 { left: 34%; width: 150px; transform: rotate(6deg); animation-delay: -2s; }
+.ray-3 { left: 60%; width: 95px; transform: rotate(-6deg); animation-delay: -4s; }
+.ray-4 { left: 82%; width: 130px; transform: rotate(-13deg); animation-delay: -1s; }
+
+.underwater-bubbles .bubble {
+  position: absolute;
+  bottom: -40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.78), rgba(0, 240, 255, 0.16) 65%, rgba(0, 240, 255, 0.45));
+  border: 1.5px solid rgba(130, 252, 255, 0.6);
+  animation: bubbleRise 9s linear infinite;
+}
+
+.b1 { left: 8%; width: 18px; height: 18px; animation-duration: 7.5s; animation-delay: 0s; }
+.b2 { left: 19%; width: 10px; height: 10px; animation-duration: 9.2s; animation-delay: -3s; }
+.b3 { left: 31%; width: 24px; height: 24px; animation-duration: 8.4s; animation-delay: -1.5s; }
+.b4 { left: 46%; width: 14px; height: 14px; animation-duration: 6.8s; animation-delay: -5s; }
+.b5 { left: 58%; width: 20px; height: 20px; animation-duration: 10s; animation-delay: -2.2s; }
+.b6 { left: 71%; width: 12px; height: 12px; animation-duration: 7.2s; animation-delay: -6s; }
+.b7 { left: 84%; width: 22px; height: 22px; animation-duration: 8.8s; animation-delay: -4.1s; }
+.b8 { left: 93%; width: 15px; height: 15px; animation-duration: 6.4s; animation-delay: -0.8s; }
+
 .cloud {
   position: absolute;
   background: rgba(255, 255, 255, 0.82);
@@ -359,6 +516,16 @@ body.phase-horror .sky-sun {
 
 body.phase-horror .cloud {
   background: rgba(55, 18, 28, 0.55);
+}
+
+body.phase-underwater .cloud {
+  opacity: 0.18;
+  background: rgba(94, 245, 255, 0.45);
+}
+
+body.phase-phonk .cloud {
+  opacity: 0.3;
+  background: rgba(180, 76, 255, 0.4);
 }
 
 .cloud::before,
@@ -415,6 +582,29 @@ body.phase-horror .cloud {
   border-top: 3px solid rgba(0, 0, 0, 0.14);
 }
 
+/* Drift Phonk Neon Perspective Grid */
+.phonk-grid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 34%;
+  opacity: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 46, 147, 0.32) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(180, 76, 255, 0.36) 1px, transparent 1px);
+  background-size: 46px 26px;
+  transform: perspective(260px) rotateX(48deg);
+  transform-origin: bottom center;
+  transition: opacity 0.7s ease;
+}
+
+body.phase-phonk .phonk-grid {
+  opacity: 0.85;
+  animation: gridScroll 1.8s linear infinite;
+}
+
 .visualizer-canvas {
   position: absolute;
   bottom: 0;
@@ -449,6 +639,18 @@ body.phase-horror .stage-hint {
   background: rgba(26, 10, 15, 0.88);
   color: #f3c8d0;
   border-color: #7c1f2e;
+}
+
+body.phase-underwater .stage-hint {
+  background: rgba(5, 30, 58, 0.88);
+  color: #aaf8ff;
+  border-color: #16c7e8;
+}
+
+body.phase-phonk .stage-hint {
+  background: rgba(24, 6, 42, 0.9);
+  color: #f4b8ff;
+  border-color: #b44cff;
 }
 
 .stage-hint.hidden-hint {
@@ -640,6 +842,20 @@ body.phase-horror .slot-mini-btn {
   box-shadow: 0 2px 0 #3f0c15;
 }
 
+body.phase-underwater .slot-mini-btn {
+  background: #08294c;
+  color: #d6fbff;
+  border-color: #16c7e8;
+  box-shadow: 0 2px 0 #044061;
+}
+
+body.phase-phonk .slot-mini-btn {
+  background: #22083b;
+  color: #f7e6ff;
+  border-color: #b44cff;
+  box-shadow: 0 2px 0 #4a0a7a;
+}
+
 .slot-mini-btn:hover {
   transform: scale(1.1);
 }
@@ -681,6 +897,18 @@ body.phase-horror .slot-name-pill {
   background: rgba(28, 10, 16, 0.9);
   color: #f8cfd8;
   border-color: #8f1d2e;
+}
+
+body.phase-underwater .slot-name-pill {
+  background: rgba(4, 26, 52, 0.92);
+  color: #7efaff;
+  border-color: #16c7e8;
+}
+
+body.phase-phonk .slot-name-pill {
+  background: rgba(24, 6, 42, 0.94);
+  color: #ff7ad9;
+  border-color: #b44cff;
 }
 
 .char-slot.occupied:hover .slot-name-pill,
@@ -737,11 +965,25 @@ body.phase-horror .cat-mystery {
   animation: pulseRec 1.8s infinite;
 }
 
+body.phase-underwater .cat-mystery {
+  background: linear-gradient(135deg, #007ea8, #6320b0);
+  color: #d9fdff;
+  border-color: #4ef7ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.45);
+}
+
+body.phase-phonk .cat-mystery {
+  background: linear-gradient(135deg, #7d12e8, #ff1e7a);
+  color: #fff0fc;
+  border-color: #f0a8ff;
+  box-shadow: 0 0 14px rgba(255, 46, 147, 0.55);
+}
+
 .outfit-tray {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 7px;
-  max-width: 1180px;
+  grid-template-columns: repeat(13, minmax(0, 1fr));
+  gap: 6px;
+  max-width: 1220px;
   margin: 0 auto;
 }
 
@@ -765,6 +1007,20 @@ body.phase-horror .outfit-tile {
   background: #1d1118;
   border-color: #6b1d2b;
   box-shadow: 0 3px 0 #3a0b14;
+}
+
+body.phase-underwater .outfit-tile {
+  background: #0a2442;
+  border-color: #14a6c9;
+  color: #defbff;
+  box-shadow: 0 3px 0 #043d59;
+}
+
+body.phase-phonk .outfit-tile {
+  background: #1c0830;
+  border-color: #9e38f0;
+  color: #f7e6ff;
+  box-shadow: 0 3px 0 #440870;
 }
 
 .outfit-tile:hover:not(.in-use) {
@@ -794,6 +1050,26 @@ body.phase-horror .outfit-tile {
 
 .outfit-tile.is-black-hat:hover:not(.in-use) {
   box-shadow: 0 7px 0 #09080c, 0 0 18px rgba(217, 30, 54, 0.7);
+}
+
+.outfit-tile.is-aqua-helmet {
+  background: linear-gradient(145deg, #06486e, #091d42);
+  border-color: #00e5ff;
+  color: #d8fdff;
+}
+
+.outfit-tile.is-aqua-helmet:hover:not(.in-use) {
+  box-shadow: 0 7px 0 #043b59, 0 0 18px rgba(0, 240, 255, 0.8);
+}
+
+.outfit-tile.is-drift-phonk {
+  background: linear-gradient(145deg, #4b0b7a, #170426);
+  border-color: #ff2e93;
+  color: #ffe8f8;
+}
+
+.outfit-tile.is-drift-phonk:hover:not(.in-use) {
+  box-shadow: 0 7px 0 #2e044d, 0 0 18px rgba(255, 46, 147, 0.85);
 }
 
 .outfit-icon-wrap {
@@ -905,6 +1181,40 @@ body.phase-horror .horror-scanlines {
   opacity: 0.55;
 }
 
+.underwater-caustics {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(0, 240, 255, 0.14), transparent 48%),
+    radial-gradient(circle at 78% 72%, rgba(255, 46, 200, 0.11), transparent 45%),
+    radial-gradient(circle at center, transparent 48%, rgba(1, 14, 34, 0.52) 100%);
+  transition: opacity 0.8s ease;
+}
+
+body.phase-underwater .underwater-caustics {
+  opacity: 1;
+}
+
+.phonk-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(255, 46, 147, 0.16), transparent 45%),
+    radial-gradient(circle at 80% 18%, rgba(157, 23, 255, 0.18), transparent 45%),
+    radial-gradient(circle at center, transparent 42%, rgba(12, 2, 22, 0.72) 100%);
+  transition: opacity 0.75s ease;
+}
+
+body.phase-phonk .phonk-vignette {
+  opacity: 1;
+}
+
 .glitch-overlay {
   position: fixed;
   inset: 0;
@@ -916,6 +1226,14 @@ body.phase-horror .horror-scanlines {
 
 .glitch-overlay.active {
   animation: phaseGlitch 0.9s steps(3) forwards;
+}
+
+.glitch-overlay.splash-active {
+  animation: phaseSplash 0.85s ease-out forwards;
+}
+
+.glitch-overlay.phonk-active {
+  animation: phasePhonk 0.78s steps(4) forwards;
 }
 
 .toast {
@@ -1010,6 +1328,37 @@ body.phase-horror .horror-scanlines {
   60% { opacity: 0.7; background: #ffffff; }
   80% { opacity: 0.9; background: #4a040e; }
   100% { opacity: 0; }
+}
+
+@keyframes phaseSplash {
+  0% { opacity: 0.92; background: radial-gradient(circle at center, #7efaff 0%, #0088cc 55%, #021229 100%); }
+  45% { opacity: 0.7; background: radial-gradient(circle at center, #00f0ff 0%, #5c16c5 70%, #021229 100%); }
+  100% { opacity: 0; }
+}
+
+@keyframes phasePhonk {
+  0% { opacity: 0.95; background: #140324; }
+  25% { opacity: 0.85; background: #ff2e93; }
+  50% { opacity: 0.95; background: #7d12e8; }
+  75% { opacity: 0.65; background: #0c0217; }
+  100% { opacity: 0; }
+}
+
+@keyframes gridScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 26px; }
+}
+
+@keyframes bubbleRise {
+  0% { transform: translateY(0) translateX(0) scale(0.8); opacity: 0; }
+  12% { opacity: 0.75; }
+  50% { transform: translateY(-48vh) translateX(14px) scale(1); opacity: 0.65; }
+  100% { transform: translateY(-96vh) translateX(-10px) scale(1.15); opacity: 0; }
+}
+
+@keyframes raySway {
+  0% { opacity: 0.45; transform: skewX(-6deg) scaleX(0.95); }
+  100% { opacity: 0.85; transform: skewX(6deg) scaleX(1.12); }
 }
 
 /* ==========================================================================

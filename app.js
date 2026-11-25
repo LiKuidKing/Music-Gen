@@ -18,7 +18,8 @@
     solo: false,
   }));
 
-  let isHorrorMode = false;
+  let currentTheme = 'normal'; // 'normal' | 'horror' | 'underwater'
+  let preferredSpecialTheme = 'normal';
   let dragState = null; // { charId, sourceType: 'tray'|'slot', sourceSlotIndex, startX, startY, moved }
   let toastTimeout = null;
 
@@ -57,6 +58,8 @@
     electro: ['oren', 'funbot', 'vineria', 'garnold', 'owakcx', 'funcomputer', 'wenda'],
     choir: ['vineria', 'sky', 'mrsun', 'mrtree', 'tunner', 'pinki', 'jevin'],
     western: ['oren', 'raddy', 'brud', 'gray', 'mrtree', 'tunner', 'wenda'],
+    underwater: ['oren', 'raddy', 'connor', 'garnold', 'allison', 'pinki', 'aqua'],
+    phonk: ['oren', 'raddy', 'connor', 'gray', 'brud', 'jevin', 'drift'],
     horror: ['oren', 'raddy', 'gray', 'sky', 'mrsun', 'jevin', 'black'],
   };
 
@@ -85,7 +88,7 @@
       slotEl.innerHTML = `
         <div class="slot-name-pill" data-role="name"></div>
         <div class="char-avatar-wrap" data-role="avatar" title="Drag an outfit here">
-          ${renderStageCharacter(null, isHorrorMode)}
+          ${renderStageCharacter(null, currentTheme)}
         </div>
         <div class="slot-controls">
           <button class="slot-mini-btn btn-mute" data-action="mute" title="Mute character">M</button>
@@ -128,14 +131,18 @@
     trayEl.innerHTML = '';
     CHARACTERS.forEach((char) => {
       const tile = document.createElement('div');
-      tile.className = 'outfit-tile' + (char.isHorrorTrigger ? ' is-black-hat' : '');
+      let extraClass = '';
+      if (char.isHorrorTrigger) extraClass = ' is-black-hat';
+      if (char.isUnderwaterTrigger) extraClass = ' is-aqua-helmet';
+      if (char.isPhonkTrigger) extraClass = ' is-drift-phonk';
+      tile.className = 'outfit-tile' + extraClass;
       tile.dataset.charId = char.id;
       tile.title = `${char.name} — ${char.role} (Drag onto a character or click)`;
 
       const catColor = CATEGORY_COLORS[char.category] || '#ccc';
       tile.innerHTML = `
         <span class="outfit-cat-dot" style="background:${catColor}"></span>
-        <div class="outfit-icon-wrap">${renderOutfitIcon(char.id, isHorrorMode)}</div>
+        <div class="outfit-icon-wrap">${renderOutfitIcon(char.id, currentTheme)}</div>
         <span class="outfit-label">${char.name}</span>
       `;
 
@@ -179,17 +186,36 @@
     slots[slotIndex].solo = false;
 
     const char = CHAR_MAP[charId];
-    const shouldBeHorror = slots.some((s) => s.charId === 'black');
+    if (char.isHorrorTrigger) preferredSpecialTheme = 'horror';
+    if (char.isUnderwaterTrigger) preferredSpecialTheme = 'underwater';
+    if (char.isPhonkTrigger) preferredSpecialTheme = 'phonk';
 
-    if (shouldBeHorror !== isHorrorMode) {
-      setHorrorPhase(shouldBeHorror);
+    const targetTheme = computeActiveTheme();
+
+    if (targetTheme !== currentTheme) {
+      setThemePhase(targetTheme);
     } else {
       renderSingleSlot(slotIndex, true);
     }
 
     if (playFx) {
-      engine.playEquipStinger(charId, !!char.isHorrorTrigger);
-      spawnSlotParticles(slotIndex, isHorrorMode ? '#d91e36' : char.color);
+      const triggerMode = char.isHorrorTrigger
+        ? 'horror'
+        : char.isUnderwaterTrigger
+        ? 'underwater'
+        : char.isPhonkTrigger
+        ? 'phonk'
+        : null;
+      engine.playEquipStinger(charId, triggerMode);
+      const particleColor =
+        currentTheme === 'horror'
+          ? '#d91e36'
+          : currentTheme === 'underwater'
+          ? '#00f0ff'
+          : currentTheme === 'phonk'
+          ? '#ff2e93'
+          : char.color;
+      spawnSlotParticles(slotIndex, particleColor);
     }
 
     if (!engine.isPlaying) {
@@ -198,6 +224,16 @@
 
     engine.setSlots(slots);
     updateUIState();
+  }
+
+  function computeActiveTheme() {
+    const present = [];
+    if (slots.some((s) => s.charId === 'black')) present.push('horror');
+    if (slots.some((s) => s.charId === 'aqua')) present.push('underwater');
+    if (slots.some((s) => s.charId === 'drift')) present.push('phonk');
+    if (present.length === 0) return 'normal';
+    if (present.includes(preferredSpecialTheme)) return preferredSpecialTheme;
+    return present[present.length - 1];
   }
 
   function swapOrMoveSlot(fromIndex, toIndex) {
@@ -218,9 +254,9 @@
     slots[slotIndex].muted = false;
     slots[slotIndex].solo = false;
 
-    const shouldBeHorror = slots.some((s) => s.charId === 'black');
-    if (shouldBeHorror !== isHorrorMode) {
-      setHorrorPhase(shouldBeHorror);
+    const targetTheme = computeActiveTheme();
+    if (targetTheme !== currentTheme) {
+      setThemePhase(targetTheme);
     } else {
       renderSingleSlot(slotIndex, false);
     }
@@ -245,23 +281,43 @@
     for (let i = 0; i < SLOT_COUNT; i++) updateSlotControlVisuals(i);
   }
 
-  function setHorrorPhase(enable) {
-    isHorrorMode = enable;
-    engine.setHorrorMode(enable);
+  function setThemePhase(theme) {
+    currentTheme = theme;
+    engine.setTheme(theme);
 
-    // Glitch flash
-    glitchOverlayEl.classList.remove('active');
+    // Transition flash (glitch for horror, aqua wave splash for underwater, neon drift flash for phonk)
+    glitchOverlayEl.classList.remove('active', 'splash-active', 'phonk-active');
     void glitchOverlayEl.offsetWidth;
-    glitchOverlayEl.classList.add('active');
+    if (theme === 'underwater') {
+      glitchOverlayEl.classList.add('splash-active');
+    } else if (theme === 'phonk') {
+      glitchOverlayEl.classList.add('phonk-active');
+    } else {
+      glitchOverlayEl.classList.add('active');
+    }
 
-    document.body.classList.toggle('phase-horror', enable);
-    document.body.classList.toggle('phase-normal', !enable);
+    document.body.classList.toggle('phase-horror', theme === 'horror');
+    document.body.classList.toggle('phase-underwater', theme === 'underwater');
+    document.body.classList.toggle('phase-phonk', theme === 'phonk');
+    document.body.classList.toggle('phase-normal', theme === 'normal');
 
-    phaseLabelEl.textContent = enable ? 'PHASE 2' : 'STUDIO';
+    phaseLabelEl.textContent =
+      theme === 'horror'
+        ? 'PHASE 2'
+        : theme === 'underwater'
+        ? 'DEEP TECHNO'
+        : theme === 'phonk'
+        ? 'DRIFT PHONK'
+        : 'STUDIO';
     bpmValueEl.textContent = String(engine.bpm);
-    mysteryHintEl.textContent = enable
-      ? '👁️ PHASE 2 ACTIVE — Remove Black to return'
-      : '??? Drag Black Hat for Phase 2';
+    mysteryHintEl.textContent =
+      theme === 'horror'
+        ? '👁️ HORROR MODE — Remove Black to return'
+        : theme === 'underwater'
+        ? '🌊 UNDERWATER TECHNO — Remove Aqua to return'
+        : theme === 'phonk'
+        ? '🔥 DRIFT PHONK — Remove Drift to return'
+        : '👁️ Black · 🌊 Aqua · 🔥 Drift = Theme Modes';
 
     // Re-render all slots & tray icons in the new theme
     for (let i = 0; i < SLOT_COUNT; i++) {
@@ -269,7 +325,15 @@
     }
     refreshTrayIcons();
 
-    showToast(enable ? '👁️ Welcome to Phase 2...' : '☀️ Back to Sunny Mode!');
+    if (theme === 'horror') {
+      showToast('👁️ Welcome to Phase 2...');
+    } else if (theme === 'underwater') {
+      showToast('🌊 Diving into Underwater Techno (128 BPM)!');
+    } else if (theme === 'phonk') {
+      showToast('🔥 DRIFT PHONK ENGAGED (136 BPM)!');
+    } else {
+      showToast('☀️ Back to Sunny Mode!');
+    }
   }
 
   function renderSingleSlot(index, animatePop) {
@@ -279,7 +343,7 @@
     const avatarWrap = slotEl.querySelector('[data-role="avatar"]');
     const namePill = slotEl.querySelector('[data-role="name"]');
 
-    avatarWrap.innerHTML = renderStageCharacter(slot.charId, isHorrorMode);
+    avatarWrap.innerHTML = renderStageCharacter(slot.charId, currentTheme);
     slotEl.classList.toggle('occupied', !!slot.charId);
 
     if (slot.charId) {
@@ -317,7 +381,7 @@
     const tiles = trayEl.querySelectorAll('.outfit-tile');
     tiles.forEach((tile) => {
       const charId = tile.dataset.charId;
-      tile.querySelector('.outfit-icon-wrap').innerHTML = renderOutfitIcon(charId, isHorrorMode);
+      tile.querySelector('.outfit-icon-wrap').innerHTML = renderOutfitIcon(charId, currentTheme);
     });
   }
 
@@ -354,7 +418,7 @@
 
       if (!dragState.moved && Math.hypot(dx, dy) > 6) {
         dragState.moved = true;
-        dragGhostEl.innerHTML = renderOutfitIcon(dragState.charId, isHorrorMode);
+        dragGhostEl.innerHTML = renderOutfitIcon(dragState.charId, currentTheme);
         dragGhostEl.classList.remove('hidden');
       }
 
@@ -458,7 +522,7 @@
         avatar._singTimer = setTimeout(() => avatar.classList.remove('singing'), 210);
       }
 
-      if (isHorrorMode && Math.random() < 0.25) {
+      if (currentTheme === 'horror' && Math.random() < 0.25) {
         avatar.classList.remove('horror-twitch');
         void avatar.offsetWidth;
         avatar.classList.add('horror-twitch');
@@ -494,13 +558,20 @@
       slots[i] = { charId: null, muted: false, solo: false };
     }
 
-    const wantHorror = list.includes('black');
+    const wantTheme = list.includes('black')
+      ? 'horror'
+      : list.includes('aqua')
+      ? 'underwater'
+      : list.includes('drift')
+      ? 'phonk'
+      : 'normal';
+    preferredSpecialTheme = wantTheme;
     list.slice(0, SLOT_COUNT).forEach((charId, idx) => {
       slots[idx].charId = charId;
     });
 
-    if (wantHorror !== isHorrorMode) {
-      setHorrorPhase(wantHorror);
+    if (wantTheme !== currentTheme) {
+      setThemePhase(wantTheme);
     } else {
       for (let i = 0; i < SLOT_COUNT; i++) renderSingleSlot(i, !!slots[i].charId);
     }
@@ -513,12 +584,18 @@
 
   function randomizeMix() {
     engine.init();
-    // Pick balanced mix: 2 beats, 1-2 effects, 2 melodies, 1-2 vocals (excluding Black unless already in Horror Mode)
+    // Pick balanced mix: 2 beats, 1-2 effects, 2 melodies, 1-2 vocals (preserving current theme)
     const poolByCat = {
       beats: CHARACTERS.filter((c) => c.category === 'beats'),
       effects: CHARACTERS.filter((c) => c.category === 'effects'),
       melodies: CHARACTERS.filter((c) => c.category === 'melodies'),
-      vocals: CHARACTERS.filter((c) => c.category === 'vocals' && !c.isHorrorTrigger),
+      vocals: CHARACTERS.filter(
+        (c) =>
+          c.category === 'vocals' &&
+          !c.isHorrorTrigger &&
+          !c.isUnderwaterTrigger &&
+          !c.isPhonkTrigger
+      ),
     };
 
     const pick = (arr, count) => {
@@ -538,8 +615,12 @@
       ...pick(poolByCat.vocals, 1),
     ];
 
-    if (isHorrorMode) {
+    if (currentTheme === 'horror') {
       chosenIds.push('black');
+    } else if (currentTheme === 'underwater') {
+      chosenIds.push('aqua');
+    } else if (currentTheme === 'phonk') {
+      chosenIds.push('drift');
     } else {
       chosenIds.push(...pick(poolByCat.effects.filter((c) => !chosenIds.includes(c.id)), 1));
     }
@@ -559,8 +640,9 @@
     for (let i = 0; i < SLOT_COUNT; i++) {
       slots[i] = { charId: null, muted: false, solo: false };
     }
-    if (isHorrorMode) {
-      setHorrorPhase(false);
+    preferredSpecialTheme = 'normal';
+    if (currentTheme !== 'normal') {
+      setThemePhase('normal');
     } else {
       for (let i = 0; i < SLOT_COUNT; i++) renderSingleSlot(i, false);
     }
@@ -692,7 +774,19 @@
       const gap = 6;
       const barW = Math.max(4, (w - gap * (barCount - 1)) / barCount);
 
-      visCtx.fillStyle = isHorrorMode ? '#d91e36' : '#ffffff';
+      if (currentTheme === 'underwater') {
+        const grad = visCtx.createLinearGradient(0, h, 0, 0);
+        grad.addColorStop(0, '#00f0ff');
+        grad.addColorStop(1, '#ff3ec8');
+        visCtx.fillStyle = grad;
+      } else if (currentTheme === 'phonk') {
+        const grad = visCtx.createLinearGradient(0, h, 0, 0);
+        grad.addColorStop(0, '#9d17ff');
+        grad.addColorStop(1, '#ff2e93');
+        visCtx.fillStyle = grad;
+      } else {
+        visCtx.fillStyle = currentTheme === 'horror' ? '#d91e36' : '#ffffff';
+      }
       for (let i = 0; i < barCount; i++) {
         const val = freqData[i] / 255;
         const barH = Math.max(3, val * h * 0.9);

@@ -250,18 +250,51 @@
       accent: '#2c6e58',
       anim: 'sing',
     },
+    {
+      id: 'aqua',
+      name: 'Aqua',
+      role: 'Deep Techno',
+      category: 'vocals',
+      color: '#00d9ff',
+      horrorColor: '#0c3b4d',
+      accent: '#ff3ec8',
+      anim: 'sway',
+      isUnderwaterTrigger: true,
+    },
+    {
+      id: 'drift',
+      name: 'Drift',
+      role: 'Drift Phonk',
+      category: 'vocals',
+      color: '#9d2bff',
+      horrorColor: '#36095c',
+      accent: '#ff2e93',
+      anim: 'bounce',
+      isPhonkTrigger: true,
+    },
   ];
 
   const CHAR_MAP = Object.fromEntries(CHARACTERS.map((c) => [c.id, c]));
 
+  function resolveTheme(themeOrBool) {
+    if (themeOrBool === true || themeOrBool === 'horror') return 'horror';
+    if (themeOrBool === 'underwater') return 'underwater';
+    if (themeOrBool === 'phonk') return 'phonk';
+    return 'normal';
+  }
+
   /* ------------------------------------------------------------------------
      Helper: Outfit Icon SVG (shown in the bottom tray & drag ghost)
      ------------------------------------------------------------------------ */
-  function renderOutfitIcon(charId, isHorror) {
+  function renderOutfitIcon(charId, themeOrBool) {
     const c = CHAR_MAP[charId];
     if (!c) return '';
+    const theme = resolveTheme(themeOrBool);
+    const isHorror = theme === 'horror';
+    const isAqua = theme === 'underwater';
+    const isPhonk = theme === 'phonk';
     const fill = isHorror ? c.horrorColor : c.color;
-    const stroke = isHorror ? '#0b0408' : '#1b2230';
+    const stroke = isHorror ? '#0b0408' : isAqua ? '#042742' : isPhonk ? '#140324' : '#1b2230';
 
     switch (charId) {
       case 'oren':
@@ -436,6 +469,28 @@
           <circle cx="42" cy="50" r="7.5" fill="rgba(255,255,255,0.65)" stroke="${stroke}" stroke-width="3"/>
           <line x1="29.5" y1="50" x2="34.5" y2="50" stroke="${stroke}" stroke-width="3"/>
         </svg>`;
+      case 'aqua':
+        return `<svg viewBox="0 0 64 64">
+          <!-- Neon Deep-Sea Diving Helmet -->
+          <circle cx="32" cy="34" r="22" fill="#063154" stroke="#00eaff" stroke-width="3"/>
+          <circle cx="32" cy="34" r="14" fill="#04182e" stroke="#4ff7ff" stroke-width="2.5"/>
+          <circle cx="32" cy="34" r="7" fill="none" stroke="#ff3ec8" stroke-width="2" stroke-dasharray="4 3"/>
+          <circle cx="32" cy="34" r="3" fill="#00f7ff"/>
+          <path d="M23 26 Q28 22 34 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+          <circle cx="13" cy="14" r="4" fill="#63f8ff" stroke="#042742" stroke-width="1.8"/>
+          <circle cx="52" cy="12" r="3" fill="#ff5fd2" stroke="#042742" stroke-width="1.8"/>
+          <rect x="17" y="51" width="30" height="7" rx="3" fill="#00c8ff" stroke="#042742" stroke-width="2.5"/>
+        </svg>`;
+      case 'drift':
+        return `<svg viewBox="0 0 64 64">
+          <!-- Drift Phonk Neon Mask & Horns -->
+          <polygon points="14,24 8,6 26,18" fill="#ff2e93" stroke="#140324" stroke-width="2.5" stroke-linejoin="round"/>
+          <polygon points="50,24 56,6 38,18" fill="#ff2e93" stroke="#140324" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M12 24 Q32 14 52 24 L48 52 Q32 58 16 52 Z" fill="#1c0730" stroke="#c85cff" stroke-width="3" stroke-linejoin="round"/>
+          <polygon points="17,31 29,34 26,39 18,37" fill="#ff2e93"/>
+          <polygon points="47,31 35,34 38,39 46,37" fill="#ff2e93"/>
+          <path d="M21 44 L26 48 L32 44 L38 48 L43 44" fill="none" stroke="#e4a8ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`;
       default:
         return '';
     }
@@ -445,12 +500,17 @@
      Helper: Full Stage Character SVG (Blank Polo OR Dressed Character)
      ViewBox: 0 0 140 215
      ------------------------------------------------------------------------ */
-  function renderStageCharacter(charId, isHorror) {
+  function renderStageCharacter(charId, themeOrBool) {
+    const theme = resolveTheme(themeOrBool);
+    const isHorror = theme === 'horror';
+    const isAqua = theme === 'underwater';
+    const isPhonk = theme === 'phonk';
+
     // Blank Polo Silhouette
     if (!charId) {
-      const bodyFill = isHorror ? '#382c32' : '#c7cdd6';
-      const shadeFill = isHorror ? '#261c22' : '#aeb6c2';
-      const outline = isHorror ? '#12080d' : '#262d3a';
+      const bodyFill = isHorror ? '#382c32' : isAqua ? '#5fa8c9' : isPhonk ? '#472a66' : '#c7cdd6';
+      const shadeFill = isHorror ? '#261c22' : isAqua ? '#397b9c' : isPhonk ? '#2b1445' : '#aeb6c2';
+      const outline = isHorror ? '#12080d' : isAqua ? '#062640' : isPhonk ? '#160426' : '#262d3a';
       return `<svg class="char-svg" viewBox="0 0 140 215">
         <!-- Blank Polo Torso -->
         <path d="M40 202 C42 152, 48 134, 70 134 C92 134, 98 152, 100 202 Z" fill="${bodyFill}" stroke="${outline}" stroke-width="4" stroke-linejoin="round"/>
@@ -459,42 +519,44 @@
         <g class="char-head-group">
           <circle cx="70" cy="96" r="37" fill="${bodyFill}" stroke="${outline}" stroke-width="4"/>
           <!-- Neutral sleepy eyes -->
-          <ellipse cx="56" cy="94" rx="5.5" ry="6.5" fill="#fff" stroke="${outline}" stroke-width="2.5"/>
-          <ellipse cx="84" cy="94" rx="5.5" ry="6.5" fill="#fff" stroke="${outline}" stroke-width="2.5"/>
-          <circle cx="56" cy="95" r="2.6" fill="${outline}"/>
-          <circle cx="84" cy="95" r="2.6" fill="${outline}"/>
+          <ellipse cx="56" cy="94" rx="5.5" ry="6.5" fill="${isAqua ? '#c7fbff' : isPhonk ? '#1c052e' : '#fff'}" stroke="${outline}" stroke-width="2.5"/>
+          <ellipse cx="84" cy="94" rx="5.5" ry="6.5" fill="${isAqua ? '#c7fbff' : isPhonk ? '#1c052e' : '#fff'}" stroke="${outline}" stroke-width="2.5"/>
+          <circle cx="56" cy="95" r="2.6" fill="${isPhonk ? '#ff2e93' : outline}"/>
+          <circle cx="84" cy="95" r="2.6" fill="${isPhonk ? '#ff2e93' : outline}"/>
           <line x1="63" y1="112" x2="77" y2="112" stroke="${outline}" stroke-width="3" stroke-linecap="round"/>
+          ${isAqua ? renderUnderwaterOverlay(null) : ''}
+          ${isPhonk ? renderPhonkOverlay(null) : ''}
         </g>
       </svg>`;
     }
 
     const c = CHAR_MAP[charId];
     const bodyColor = isHorror ? c.horrorColor : c.color;
-    const outline = isHorror ? '#0d0408' : '#1b2230';
-    const eyeBg = isHorror ? '#170409' : '#ffffff';
-    const pupilColor = isHorror ? '#ff2942' : '#151a24';
+    const outline = isHorror ? '#0d0408' : isAqua ? '#04233b' : isPhonk ? '#150326' : '#1b2230';
+    const eyeBg = isHorror ? '#170409' : isAqua ? '#041c33' : isPhonk ? '#160426' : '#ffffff';
+    const pupilColor = isHorror ? '#ff2942' : isAqua ? '#38fbff' : isPhonk ? '#ff2e93' : '#151a24';
 
     // Special silhouette characters: Mr. Sun, Mr. Tree, Mr. Fun Computer
     if (charId === 'mrsun') {
-      return renderMrSun(bodyColor, outline, isHorror);
+      return renderMrSun(bodyColor, outline, theme);
     }
     if (charId === 'mrtree') {
-      return renderMrTree(bodyColor, outline, isHorror);
+      return renderMrTree(bodyColor, outline, theme);
     }
     if (charId === 'funcomputer') {
-      return renderFunComputer(bodyColor, outline, isHorror);
+      return renderFunComputer(bodyColor, outline, theme);
     }
 
     // Standard Sprunki humanoid base + unique accessories
     const accessoryBack = getAccessoryBack(charId, bodyColor, c.accent, outline, isHorror);
-    const accessoryFront = getAccessoryFront(charId, bodyColor, c.accent, outline, isHorror);
-    const face = getCharacterFace(charId, outline, eyeBg, pupilColor, isHorror);
-    const torsoExtra = getTorsoExtra(charId, bodyColor, c.accent, outline, isHorror);
+    const accessoryFront = getAccessoryFront(charId, bodyColor, c.accent, outline, isHorror, isAqua);
+    const face = getCharacterFace(charId, outline, eyeBg, pupilColor, isHorror, isAqua, isPhonk);
+    const torsoExtra = getTorsoExtra(charId, bodyColor, c.accent, outline, isHorror, isAqua);
 
     return `<svg class="char-svg" viewBox="0 0 140 215">
       <!-- Torso -->
       <path d="M36 204 C39 150, 47 132, 70 132 C93 132, 101 150, 104 204 Z" fill="${bodyColor}" stroke="${outline}" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M70 132 C93 132, 101 150, 104 204 L85 204 C84 162, 79 140, 70 132 Z" fill="#000" opacity="0.14"/>
+      <path d="M70 132 C93 132, 101 150, 104 204 L85 204 C84 162, 79 140, 70 132 Z" fill="${isAqua ? '#003a5c' : isPhonk ? '#2e0552' : '#000'}" opacity="${isAqua || isPhonk ? '0.32' : '0.14'}"/>
       ${torsoExtra}
 
       <!-- Animated Head Group -->
@@ -502,18 +564,50 @@
         ${accessoryBack}
         <circle cx="70" cy="96" r="39" fill="${bodyColor}" stroke="${outline}" stroke-width="4"/>
         <!-- Subtle highlight -->
-        <path d="M46 76 Q58 64 74 66" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity="${isHorror ? '0.08' : '0.32'}"/>
+        <path d="M46 76 Q58 64 74 66" fill="none" stroke="${isAqua ? '#7efaff' : isPhonk ? '#e899ff' : '#fff'}" stroke-width="4" stroke-linecap="round" opacity="${isHorror ? '0.08' : isAqua || isPhonk ? '0.52' : '0.32'}"/>
         ${face}
         ${accessoryFront}
         ${isHorror ? renderHorrorOverlay(charId) : ''}
+        ${isAqua ? renderUnderwaterOverlay(charId) : ''}
+        ${isPhonk ? renderPhonkOverlay(charId) : ''}
       </g>
     </svg>`;
   }
 
-  function getCharacterFace(charId, outline, eyeBg, pupilColor, isHorror) {
+  function getCharacterFace(charId, outline, eyeBg, pupilColor, isHorror, isAqua, isPhonk) {
+    // Drift Phonk Street Oni Visor & Mask
+    if (charId === 'drift') {
+      const glow = isHorror ? '#ff2942' : '#ff2e93';
+      return `
+        <path d="M34 94 Q70 84 106 94 L102 126 Q70 138 38 126 Z" fill="#140424" stroke="${outline}" stroke-width="3.5" stroke-linejoin="round"/>
+        <!-- Fierce glowing drift eyes -->
+        <polygon points="42,84 63,89 58,97 44,94" fill="${glow}"/>
+        <polygon points="98,84 77,89 82,97 96,94" fill="${glow}"/>
+        <!-- Phonk skull zig-zag bandana -->
+        <path class="mouth-rest" d="M50 112 L57 118 L64 111 L70 118 L76 111 L83 118 L90 112" fill="none" stroke="#e9b5ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="mouth-sing" d="M48 109 L56 122 L64 109 L70 123 L76 109 L84 122 L92 109" fill="none" stroke="${glow}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+      `;
+    }
+
+    // Aqua Neon Diver Visor
+    if (charId === 'aqua') {
+      const glow = isHorror ? '#ff2942' : isPhonk ? '#ff2e93' : '#00f7ff';
+      const ring = isHorror ? '#910f24' : isPhonk ? '#b44cff' : '#ff3ec8';
+      return `
+        <circle cx="70" cy="96" r="28" fill="#041529" stroke="${glow}" stroke-width="3.5"/>
+        <circle cx="70" cy="96" r="18" fill="none" stroke="${ring}" stroke-width="2.5" stroke-dasharray="6 4"/>
+        <ellipse class="mouth-rest" cx="59" cy="94" rx="5.5" ry="6.5" fill="${glow}"/>
+        <ellipse class="mouth-rest" cx="81" cy="94" rx="5.5" ry="6.5" fill="${glow}"/>
+        <rect class="mouth-sing" x="50" y="90" width="8" height="14" rx="3" fill="${glow}"/>
+        <rect class="mouth-sing" x="62" y="84" width="7" height="22" rx="3" fill="${ring}"/>
+        <rect class="mouth-sing" x="73" y="86" width="7" height="19" rx="3" fill="${glow}"/>
+        <rect class="mouth-sing" x="84" y="91" width="7" height="12" rx="3" fill="${ring}"/>
+      `;
+    }
+
     // Visor characters (Fun Bot, Garnold)
     if (charId === 'funbot' || charId === 'garnold') {
-      const glow = isHorror ? '#ff2942' : charId === 'funbot' ? '#4cf7ff' : '#ffe45e';
+      const glow = isHorror ? '#ff2942' : isAqua ? '#00f7ff' : isPhonk ? '#ff2e93' : charId === 'funbot' ? '#4cf7ff' : '#ffe45e';
       return `
         <rect x="38" y="79" width="64" height="26" rx="11" fill="#171f2b" stroke="${outline}" stroke-width="3.5"/>
         <circle cx="55" cy="92" r="${isHorror ? 4 : 6}" fill="${glow}"/>
@@ -759,6 +853,22 @@
           <!-- Friendly Mustache -->
           <path d="M52 108 Q61 102 70 107 Q79 102 88 108 Q79 114 70 110 Q61 114 52 108 Z" fill="${isHorror ? '#261409' : '#6e3f1d'}" stroke="${outline}" stroke-width="2.5" stroke-linejoin="round"/>
         `;
+      case 'aqua':
+        return `
+          <!-- Heavy Deep-Sea Neon Diving Helmet Rim & Antenna -->
+          <circle cx="70" cy="96" r="42" fill="none" stroke="${isHorror ? '#521521' : '#00e5ff'}" stroke-width="5"/>
+          <path d="M27 88 L20 88 M113 88 L120 88" stroke="${isHorror ? '#ff2942' : '#ff3ec8'}" stroke-width="6" stroke-linecap="round"/>
+          <line x1="70" y1="53" x2="70" y2="32" stroke="${outline}" stroke-width="4.5" stroke-linecap="round"/>
+          <circle cx="70" cy="30" r="7" fill="${isHorror ? '#ff2942' : '#ff3ec8'}" stroke="${outline}" stroke-width="3"/>
+          <rect x="44" y="130" width="52" height="10" rx="5" fill="#063559" stroke="${outline}" stroke-width="3.5"/>
+        `;
+      case 'drift':
+        return `
+          <!-- Street Phonk Horns & Dark Hood -->
+          <polygon points="40,68 20,30 56,56" fill="#ff2e93" stroke="${outline}" stroke-width="4" stroke-linejoin="round"/>
+          <polygon points="100,68 120,30 84,56" fill="#ff2e93" stroke="${outline}" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M30 78 Q70 46 110 78 Q94 58 70 58 Q46 58 30 78 Z" fill="#180529" stroke="#b44cff" stroke-width="3"/>
+        `;
       default:
         return '';
     }
@@ -790,11 +900,24 @@
     if (charId === 'doug') {
       return `<path d="M48 136 Q70 148 92 136 L94 154 Q70 164 46 154 Z" fill="${isHorror ? '#1b362b' : accent}" stroke="${outline}" stroke-width="3"/>`;
     }
+    if (charId === 'aqua') {
+      return `<rect x="50" y="148" width="40" height="28" rx="8" fill="#062847" stroke="${outline}" stroke-width="3.5"/>
+              <circle cx="70" cy="162" r="7" fill="${isHorror ? '#ff2942' : '#00f7ff'}" stroke="${outline}" stroke-width="2.5"/>
+              <line x1="40" y1="184" x2="100" y2="184" stroke="#ff3ec8" stroke-width="4" stroke-linecap="round"/>`;
+    }
+    if (charId === 'drift') {
+      return `<path d="M48 138 Q70 166 92 138" fill="none" stroke="#ffcf33" stroke-width="5" stroke-linecap="round"/>
+              <polygon points="70,156 62,168 70,178 78,168" fill="#ff2e93" stroke="${outline}" stroke-width="2.5" stroke-linejoin="round"/>`;
+    }
     return '';
   }
 
-  function renderMrSun(bodyColor, outline, isHorror) {
-    const rayColor = isHorror ? '#a81224' : '#ff9119';
+  function renderMrSun(bodyColor, outline, theme) {
+    const isHorror = theme === 'horror';
+    const isAqua = theme === 'underwater';
+    const isPhonk = theme === 'phonk';
+    const rayColor = isHorror ? '#a81224' : isAqua ? '#ff3ec8' : isPhonk ? '#b44cff' : '#ff9119';
+    const orbFill = isAqua ? '#00e5ff' : isPhonk ? '#ff2e93' : bodyColor;
     return `<svg class="char-svg" viewBox="0 0 140 215">
       <g class="char-head-group">
         <g stroke="${rayColor}" stroke-width="9" stroke-linecap="round">
@@ -807,59 +930,71 @@
           <line x1="112" y1="72" x2="98" y2="86"/>
           <line x1="42" y1="144" x2="28" y2="158"/>
         </g>
-        <circle cx="70" cy="115" r="44" fill="${bodyColor}" stroke="${outline}" stroke-width="4.5"/>
+        <circle cx="70" cy="115" r="44" fill="${orbFill}" stroke="${outline}" stroke-width="4.5"/>
         ${
           isHorror
             ? `<circle cx="70" cy="115" r="24" fill="#170409" stroke="${outline}" stroke-width="3.5"/>
                <circle cx="70" cy="115" r="10" fill="#ff2942"/>
                <circle cx="70" cy="115" r="4" fill="#000"/>`
-            : `<ellipse cx="55" cy="108" rx="6.5" ry="8" fill="#fff" stroke="${outline}" stroke-width="3"/>
-               <ellipse cx="85" cy="108" rx="6.5" ry="8" fill="#fff" stroke="${outline}" stroke-width="3"/>
-               <circle cx="56" cy="108" r="3.5" fill="${outline}"/>
-               <circle cx="86" cy="108" r="3.5" fill="${outline}"/>
+            : `<ellipse cx="55" cy="108" rx="6.5" ry="8" fill="${isAqua ? '#041c33' : isPhonk ? '#160426' : '#fff'}" stroke="${outline}" stroke-width="3"/>
+               <ellipse cx="85" cy="108" rx="6.5" ry="8" fill="${isAqua ? '#041c33' : isPhonk ? '#160426' : '#fff'}" stroke="${outline}" stroke-width="3"/>
+               <circle cx="56" cy="108" r="3.5" fill="${isAqua ? '#4cf7ff' : isPhonk ? '#ffcf33' : outline}"/>
+               <circle cx="86" cy="108" r="3.5" fill="${isAqua ? '#4cf7ff' : isPhonk ? '#ffcf33' : outline}"/>
                <path class="mouth-rest" d="M55 128 Q70 140 85 128" fill="none" stroke="${outline}" stroke-width="3.5" stroke-linecap="round"/>
-               <ellipse class="mouth-sing" cx="70" cy="131" rx="11" ry="8" fill="#701f1f" stroke="${outline}" stroke-width="3"/>`
+               <ellipse class="mouth-sing" cx="70" cy="131" rx="11" ry="8" fill="${isAqua ? '#041c33' : isPhonk ? '#160426' : '#701f1f'}" stroke="${outline}" stroke-width="3"/>`
         }
+        ${isAqua ? renderUnderwaterOverlay('mrsun') : ''}
+        ${isPhonk ? renderPhonkOverlay('mrsun') : ''}
       </g>
     </svg>`;
   }
 
-  function renderMrTree(bodyColor, outline, isHorror) {
-    const leaf1 = isHorror ? '#1b3620' : '#32ad47';
-    const leaf2 = isHorror ? '#254a2b' : '#4dd162';
+  function renderMrTree(bodyColor, outline, theme) {
+    const isHorror = theme === 'horror';
+    const isAqua = theme === 'underwater';
+    const isPhonk = theme === 'phonk';
+    const leaf1 = isHorror ? '#1b3620' : isAqua ? '#00a896' : isPhonk ? '#6a12b8' : '#32ad47';
+    const leaf2 = isHorror ? '#254a2b' : isAqua ? '#02f2d2' : isPhonk ? '#d938ff' : '#4dd162';
+    const trunk = isAqua ? '#3a2d6b' : isPhonk ? '#230838' : bodyColor;
     return `<svg class="char-svg" viewBox="0 0 140 215">
-      <rect x="46" y="102" width="48" height="102" rx="10" fill="${bodyColor}" stroke="${outline}" stroke-width="4"/>
+      <rect x="46" y="102" width="48" height="102" rx="10" fill="${trunk}" stroke="${outline}" stroke-width="4"/>
       <g class="char-head-group">
         <circle cx="40" cy="78" r="30" fill="${leaf1}" stroke="${outline}" stroke-width="4"/>
         <circle cx="100" cy="78" r="30" fill="${leaf1}" stroke="${outline}" stroke-width="4"/>
         <circle cx="70" cy="56" r="36" fill="${leaf2}" stroke="${outline}" stroke-width="4"/>
-        <ellipse cx="58" cy="130" rx="6" ry="7.5" fill="${isHorror ? '#170409' : '#fff'}" stroke="${outline}" stroke-width="3"/>
-        <ellipse cx="82" cy="130" rx="6" ry="7.5" fill="${isHorror ? '#170409' : '#fff'}" stroke="${outline}" stroke-width="3"/>
-        <circle cx="58" cy="130" r="3" fill="${isHorror ? '#ff2942' : outline}"/>
-        <circle cx="82" cy="130" r="3" fill="${isHorror ? '#ff2942' : outline}"/>
+        <ellipse cx="58" cy="130" rx="6" ry="7.5" fill="${isHorror ? '#170409' : isAqua ? '#041c33' : isPhonk ? '#160426' : '#fff'}" stroke="${outline}" stroke-width="3"/>
+        <ellipse cx="82" cy="130" rx="6" ry="7.5" fill="${isHorror ? '#170409' : isAqua ? '#041c33' : isPhonk ? '#160426' : '#fff'}" stroke="${outline}" stroke-width="3"/>
+        <circle cx="58" cy="130" r="3" fill="${isHorror ? '#ff2942' : isAqua ? '#4cf7ff' : isPhonk ? '#ff2e93' : outline}"/>
+        <circle cx="82" cy="130" r="3" fill="${isHorror ? '#ff2942' : isAqua ? '#4cf7ff' : isPhonk ? '#ff2e93' : outline}"/>
         <path class="mouth-rest" d="M58 148 Q70 156 82 148" fill="none" stroke="${outline}" stroke-width="3.5" stroke-linecap="round"/>
         <ellipse class="mouth-sing" cx="70" cy="150" rx="10" ry="8" fill="#2b120e" stroke="${outline}" stroke-width="3"/>
       </g>
     </svg>`;
   }
 
-  function renderFunComputer(bodyColor, outline, isHorror) {
-    const screenBg = isHorror ? '#1f040b' : '#132f38';
-    const screenText = isHorror ? '#ff2942' : '#40ffa8';
+  function renderFunComputer(bodyColor, outline, theme) {
+    const isHorror = theme === 'horror';
+    const isAqua = theme === 'underwater';
+    const isPhonk = theme === 'phonk';
+    const screenBg = isHorror ? '#1f040b' : isAqua ? '#031c36' : isPhonk ? '#170326' : '#132f38';
+    const screenText = isHorror ? '#ff2942' : isAqua ? '#00f7ff' : isPhonk ? '#ff2e93' : '#40ffa8';
+    const restTxt = isHorror ? 'RUN' : isAqua ? '~ ♫ ~' : isPhonk ? '808' : '^ _ ^';
+    const singTxt = isHorror ? '!!!' : isAqua ? '⚡♫⚡' : isPhonk ? 'PHONK' : '^ O ^';
+    const bodyFill = isAqua ? '#0d4470' : isPhonk ? '#2b0947' : bodyColor;
     return `<svg class="char-svg" viewBox="0 0 140 215">
       <!-- Stand & Desk Base -->
       <rect x="54" y="160" width="32" height="24" fill="#8b96a6" stroke="${outline}" stroke-width="3.5"/>
-      <rect x="28" y="180" width="84" height="22" rx="6" fill="${bodyColor}" stroke="${outline}" stroke-width="4"/>
+      <rect x="28" y="180" width="84" height="22" rx="6" fill="${bodyFill}" stroke="${outline}" stroke-width="4"/>
       <g class="char-head-group">
         <!-- Propeller Hat -->
-        <path d="M50 74 Q70 50 90 74 Z" fill="${isHorror ? '#57111e' : '#ff4757'}" stroke="${outline}" stroke-width="3.5"/>
+        <path d="M50 74 Q70 50 90 74 Z" fill="${isHorror ? '#57111e' : isAqua || isPhonk ? '#ff3ec8' : '#ff4757'}" stroke="${outline}" stroke-width="3.5"/>
         <line x1="70" y1="62" x2="70" y2="50" stroke="${outline}" stroke-width="4"/>
-        <ellipse cx="70" cy="50" rx="22" ry="4.5" fill="#ffd93b" stroke="${outline}" stroke-width="3"/>
+        <ellipse cx="70" cy="50" rx="22" ry="4.5" fill="${isAqua ? '#00f7ff' : isPhonk ? '#b44cff' : '#ffd93b'}" stroke="${outline}" stroke-width="3"/>
         <!-- CRT Monitor -->
-        <rect x="20" y="72" width="100" height="88" rx="14" fill="${bodyColor}" stroke="${outline}" stroke-width="4"/>
+        <rect x="20" y="72" width="100" height="88" rx="14" fill="${bodyFill}" stroke="${outline}" stroke-width="4"/>
         <rect x="30" y="84" width="80" height="62" rx="8" fill="${screenBg}" stroke="${outline}" stroke-width="3"/>
-        <text class="mouth-rest" x="70" y="122" text-anchor="middle" font-family="monospace" font-size="22" font-weight="900" fill="${screenText}">${isHorror ? 'RUN' : '^ _ ^'}</text>
-        <text class="mouth-sing" x="70" y="124" text-anchor="middle" font-family="monospace" font-size="24" font-weight="900" fill="${screenText}">${isHorror ? '!!!' : '^ O ^'}</text>
+        <text class="mouth-rest" x="70" y="122" text-anchor="middle" font-family="monospace" font-size="20" font-weight="900" fill="${screenText}">${restTxt}</text>
+        <text class="mouth-sing" x="70" y="124" text-anchor="middle" font-family="monospace" font-size="18" font-weight="900" fill="${screenText}">${singTxt}</text>
       </g>
     </svg>`;
   }
@@ -870,6 +1005,42 @@
       <g opacity="0.55" pointer-events="none">
         <path d="M46 72 L52 84 L48 92" fill="none" stroke="#1a0308" stroke-width="2"/>
         <path d="M88 104 L94 118" fill="none" stroke="#b30e24" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+    `;
+  }
+
+  function renderUnderwaterOverlay(charId) {
+    if (charId === 'aqua') {
+      return `
+        <g pointer-events="none">
+          <circle cx="116" cy="50" r="6" fill="rgba(120,250,255,0.45)" stroke="#63f8ff" stroke-width="2"/>
+          <circle cx="124" cy="34" r="3.5" fill="rgba(255,95,210,0.45)" stroke="#ff7fe0" stroke-width="1.5"/>
+          <circle cx="24" cy="44" r="4.5" fill="rgba(120,250,255,0.45)" stroke="#63f8ff" stroke-width="1.8"/>
+        </g>
+      `;
+    }
+    const cy = charId === 'mrsun' ? 115 : 96;
+    const r = charId === 'mrsun' ? 50 : 46;
+    return `
+      <g pointer-events="none">
+        <!-- Translucent glowing diving bubble helmet -->
+        <circle cx="70" cy="${cy}" r="${r}" fill="rgba(0, 229, 255, 0.11)" stroke="#52fbff" stroke-width="2.6" opacity="0.82"/>
+        <path d="M38 ${cy - 22} Q50 ${cy - 38} 68 ${cy - 38}" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" opacity="0.65"/>
+        <!-- Tiny rising bubbles -->
+        <circle cx="114" cy="${cy - 38}" r="5" fill="rgba(120,250,255,0.45)" stroke="#63f8ff" stroke-width="1.8"/>
+        <circle cx="122" cy="${cy - 52}" r="3" fill="rgba(255,95,210,0.45)" stroke="#ff7fe0" stroke-width="1.5"/>
+      </g>
+    `;
+  }
+
+  function renderPhonkOverlay(charId) {
+    const cy = charId === 'mrsun' ? 115 : 96;
+    return `
+      <g pointer-events="none" opacity="0.85">
+        <!-- Neon purple/magenta drift aura sparks -->
+        <path d="M18 ${cy - 18} L30 ${cy - 24} M122 ${cy - 18} L110 ${cy - 24}" stroke="#ff2e93" stroke-width="3" stroke-linecap="round"/>
+        <path d="M14 ${cy + 8} L26 ${cy + 4} M126 ${cy + 8} L114 ${cy + 4}" stroke="#b44cff" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="118,${cy - 44} 121,${cy - 36} 129,${cy - 36} 122,${cy - 31} 125,${cy - 23} 118,${cy - 28} 111,${cy - 23} 114,${cy - 31} 107,${cy - 36} 115,${cy - 36}" fill="#ff2e93" opacity="0.75"/>
       </g>
     `;
   }
